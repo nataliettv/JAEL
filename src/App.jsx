@@ -183,7 +183,7 @@ export default function JaelPortfolio() {
       <section id="inicio" style={S.hero} ref={setRef("inicio")}>
         <HeroSlideshow />
         <div style={{position:"absolute",inset:0,background:"linear-gradient(to right,rgba(0,0,0,0.72) 0%,rgba(0,0,0,0.15) 100%)",zIndex:0}}/>
-        <div style={S.heroContent}>
+        <div style={S.heroContent} className="hero-content">
           <p style={S.heroEyebrow} className="fade-up-1">{t.heroEyebrow}</p>
           <h1 style={S.heroTitle} className="fade-up-2">Jael<br/><span style={S.heroTitleAccent}>Herrera</span></h1>
           <p style={S.heroSub} className="fade-up-3">{t.heroSub}</p>
@@ -624,12 +624,18 @@ function getCss(D) {
     .scroll-down-btn:hover{background:rgba(255,255,255,0.15) !important;border-color:white !important}
     @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
     .scroll-down-btn{animation:bounce 2s infinite}
-    ./*placeholder*/
+    @media(max-width:768px){
       .nav-links-hide{display:none !important}
       .hamburger-show{display:flex !important}
-    }
-    @media(max-width:768px){
       .about-grid{grid-template-columns:1fr !important;gap:2rem !important}
+    }
+    @media(max-width:600px){
+      #inicio{padding:0 1.5rem !important}
+      #sobre-mi,#experiencia,#portafolio,#contacto{padding:3rem 1.2rem !important}
+      #inicio .hero-content{max-width:100% !important}
+    }
+    @media(max-width:480px){
+      #inicio{padding:0 1.2rem !important}
     }
   `;
 }
