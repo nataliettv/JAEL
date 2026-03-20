@@ -110,6 +110,7 @@ export default function JaelPortfolio() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [visibleSections, setVisibleSections] = useState(new Set());
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const sectionRefs = useRef({});
 
   const t = T[lang];
@@ -119,6 +120,12 @@ export default function JaelPortfolio() {
     const h = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", h);
     return () => window.removeEventListener("scroll", h);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -151,23 +158,25 @@ export default function JaelPortfolio() {
       <nav style={{ ...S.nav, ...(scrolled ? S.navScrolled : {}) }}>
         <div style={S.navInner}>
           <span style={S.logo} onClick={() => scrollTo("inicio")}>JH<span style={{color:D.gold}}>.</span></span>
-          <div style={S.navLinks} className="nav-links-hide">
+          <div style={{...S.navLinks, display: isMobile ? "none" : "flex"}}>
             {t.nav.map((link, i) => (
               <button key={link} style={S.navLink} className="nav-btn" onClick={() => scrollTo(navIds[i])}>{link}</button>
             ))}
           </div>
           <div style={{display:"flex",alignItems:"center",gap:"0.5rem"}}>
-            <button onClick={() => { setLang(lang==="es"?"en":"es"); setActiveCategory(0); }} style={S.controlBtn} className="control-btn">
-              <><img src={lang==="es" ? "/usa.png" : "/mexico.jpg"} style={{width:22,height:15,objectFit:"cover",marginRight:"0.4rem"}}/>{lang==="es" ? "EN" : "ES"}</>
-            </button>
-            <button onClick={() => setDarkMode(!darkMode)} style={S.controlBtn} className="control-btn">
-              {darkMode?"☀︎ Light":"☾ Dark"}
-            </button>
-            <button style={S.hamburger} className="hamburger-show" onClick={() => setMenuOpen(!menuOpen)}>
+            {!isMobile && <>
+              <button onClick={() => { setLang(lang==="es"?"en":"es"); setActiveCategory(0); }} style={S.controlBtn} className="control-btn">
+                <><img src={lang==="es" ? "/usa.png" : "/mexico.jpg"} style={{width:22,height:15,objectFit:"cover",marginRight:"0.4rem"}}/>{lang==="es" ? "EN" : "ES"}</>
+              </button>
+              <button onClick={() => setDarkMode(!darkMode)} style={S.controlBtn} className="control-btn">
+                {darkMode?"☀︎ Light":"☾ Dark"}
+              </button>
+            </>}
+            {isMobile && <button style={{...S.hamburger, display:"flex"}} onClick={() => setMenuOpen(!menuOpen)}>
               <span style={{...S.bar,...(menuOpen?S.bar1Open:{})}}/>
               <span style={{...S.bar,opacity:menuOpen?0:1}}/>
               <span style={{...S.bar,...(menuOpen?S.bar3Open:{})}}/>
-            </button>
+            </button>}
           </div>
         </div>
         {menuOpen && (
@@ -175,12 +184,20 @@ export default function JaelPortfolio() {
             {t.nav.map((link, i) => (
               <button key={link} style={S.mobileLink} onClick={() => { scrollTo(navIds[i]); setMenuOpen(false); }}>{link}</button>
             ))}
+            <div style={{display:"flex",gap:"0.5rem",padding:"1rem 2rem",borderTop:`1px solid ${D.border}`}}>
+              <button onClick={() => { setLang(lang==="es"?"en":"es"); setActiveCategory(0); }} style={{...S.controlBtn,width:"auto",padding:"0.4rem 1rem"}}>
+                <><img src={lang==="es" ? "/usa.png" : "/mexico.jpg"} style={{width:20,height:14,objectFit:"cover",marginRight:"0.4rem"}}/>{lang==="es" ? "EN" : "ES"}</>
+              </button>
+              <button onClick={() => setDarkMode(!darkMode)} style={{...S.controlBtn,width:"auto",padding:"0.4rem 1rem"}}>
+                {darkMode?"☀︎ Light":"☾ Dark"}
+              </button>
+            </div>
           </div>
         )}
       </nav>
 
       {/*INICIO*/}
-      <section id="inicio" style={S.hero} ref={setRef("inicio")}>
+      <section id="inicio" style={{...S.hero, padding: isMobile ? "0 1.5rem" : "0 6rem"}} ref={setRef("inicio")}>
         <HeroSlideshow />
         <div style={{position:"absolute",inset:0,background:"linear-gradient(to right,rgba(0,0,0,0.72) 0%,rgba(0,0,0,0.15) 100%)",zIndex:0}}/>
         <div style={S.heroContent} className="hero-content">
@@ -201,7 +218,7 @@ export default function JaelPortfolio() {
 
       {/*ABOUT ME*/}
       <section id="sobre-mi" style={S.section} ref={setRef("sobre-mi")}>
-        <div style={{...S.container,...S.aboutGrid}}>
+        <div style={{...S.container,...S.aboutGrid, gridTemplateColumns: isMobile ? "1fr" : "1fr 1.4fr", gap: isMobile ? "2rem" : "5rem"}}>
           <div style={{...S.aboutLeft,...(isVisible("sobre-mi")?{opacity:1,transform:"translateX(0)",transition:"all 0.8s ease"}:{})}}>
             <div style={S.photoFrame}>
               <div style={S.photoPlaceholder}>
