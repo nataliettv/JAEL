@@ -106,3 +106,22 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+@media (max-width: 768px) {
+  nav .nav-links-hide {
+    display: none !important;
+  }
+  
+  .hamburger-show {
+    display: flex !important;
+  }
+
+  #inicio {
+    padding: 0 1.5rem !important;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+}
