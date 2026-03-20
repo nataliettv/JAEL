@@ -139,7 +139,15 @@ export default function JaelPortfolio() {
 
   const setRef = (id) => (el) => { sectionRefs.current[id] = el; };
   const isVisible = (id) => visibleSections.has(id);
-  const scrollTo = (id) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setMenuOpen(false); };
+  const scrollTo = (id) => {
+  const el = document.getElementById(id);
+  if (el) {
+    const offset = 80;
+    const top = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: "smooth" });
+  }
+  setMenuOpen(false);
+};
 
   const navIds = ["inicio","sobre-mi","experiencia","portafolio","contacto"];
   const cats = t.categories;
